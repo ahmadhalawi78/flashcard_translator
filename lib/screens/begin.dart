@@ -7,18 +7,20 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  bool showTextField = false;
+  bool showTextField = false; // switch between name input and initial button
   final TextEditingController _nameController = TextEditingController();
-  bool _isNameEmpty = true; // Track if name field is empty
+  bool _isNameEmpty = true; // disables "Next" button if empty
 
   @override
   void initState() {
     super.initState();
+    // update button state when text changes
     _nameController.addListener(_updateButtonState);
   }
 
   @override
   void dispose() {
+    // clean controller to prevent memory leaks
     _nameController.removeListener(_updateButtonState);
     _nameController.dispose();
     super.dispose();
@@ -36,12 +38,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
+            colors: [Color(0xFF5C89EB), Color(0xFFFECA9A)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF5C89EB),  // Blue
-              Color(0xFFFECA9A),  // Peach
-            ],
           ),
         ),
         child: Center(
@@ -50,11 +49,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo
+                // return to flash icon if logo doesnt load
                 Image.asset(
                   'assets/images/logo.png',
                   height: 150,
-                  errorBuilder: (context, error, stackTrace) => Icon(
+                  errorBuilder: (_, __, ___) => Icon(
                     Icons.flash_on,
                     size: 120,
                     color: Colors.white,
@@ -62,6 +61,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 const SizedBox(height: 50),
 
+                // switch between button and text input
                 if (!showTextField) ...[
                   ElevatedButton(
                     onPressed: () => setState(() => showTextField = true),
@@ -72,16 +72,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text(
-                      'Enter Your Name',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: const Text('Enter Your Name'),
                   ),
                 ] else ...[
+                  // customized text input container
                   Container(
                     width: 300,
                     decoration: BoxDecoration(
@@ -102,14 +96,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         contentPadding: EdgeInsets.all(16),
                         border: InputBorder.none,
                       ),
-                      onChanged: (text) {
-                        setState(() {
-                          _isNameEmpty = text.isEmpty;
-                        });
-                      },
                     ),
                   ),
                   const SizedBox(height: 20),
+                  // navigate to HomePage when name isn't empty
                   ElevatedButton(
                     onPressed: _isNameEmpty
                         ? null
@@ -126,14 +116,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text(
-                      'Next',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: const Text('Next'),
                   ),
                 ],
               ],
