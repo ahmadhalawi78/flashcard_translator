@@ -48,7 +48,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/logo1.png',
+                  'assets/images/logo.png',
                   height: 150,
                   errorBuilder: (_, __, ___) => Icon(
                     Icons.flash_on,
