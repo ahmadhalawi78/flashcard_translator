@@ -1,29 +1,37 @@
 import 'package:flutter/material.dart';
 import 'screens/begin.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'screens/flashcardspage.dart';
+import '../models/flashcard.dart';
 
-// main entry point of app
-void main() {
-  // run FlashcardApp widget as root
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+
+  // ✅ Register your model adapter
+  Hive.registerAdapter(FlashcardAdapter());
+
+  // ✅ Re-open it with correct type
+  await Hive.openBox<List<Flashcard>>('categories');
+
   runApp(const FlashcardApp());
 }
 
-// root widget, stateless, so it doesnt hold a state
 class FlashcardApp extends StatelessWidget {
   const FlashcardApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flashcard App', // app name
+      title: 'Flashcard App',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData( // style of app
-        scaffoldBackgroundColor: Colors.white, // background color for Scaffold widgets
-        primarySwatch: Colors.deepPurple, // color palette used
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
+        primarySwatch: Colors.deepPurple,
 
-        // appBar customize globally
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
-          elevation: 0, // remove shadow
+          elevation: 0,
           centerTitle: true,
           iconTheme: IconThemeData(color: Colors.black),
           titleTextStyle: TextStyle(
@@ -33,7 +41,6 @@ class FlashcardApp extends StatelessWidget {
           ),
         ),
 
-        // ElevatedButton customize globally
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF231274),
@@ -45,20 +52,17 @@ class FlashcardApp extends StatelessWidget {
           ),
         ),
 
-        // input fields customize globally
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Color(0xFF231274), width: 2),
           ),
-          focusedBorder: OutlineInputBorder( // style when focused
+          focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Color(0xFF231274), width: 2),
           ),
         ),
       ),
-
-      // begin.dart as initial
       home: WelcomeScreen(),
     );
   }

@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
 import 'FlasgcardDetailPage.dart';
+import '../models/flashcard.dart';
 
 class FlashcardListPage extends StatefulWidget {
-  final List<Map<String, String>> flashcards;
+  final List<Flashcard> flashcards;
   final String categoryName;
 
-  const FlashcardListPage({required this.flashcards, required this.categoryName});
+  const FlashcardListPage({
+    required this.flashcards,
+    required this.categoryName,
+  });
 
   @override
   _FlashcardListPageState createState() => _FlashcardListPageState();
 }
 
 class _FlashcardListPageState extends State<FlashcardListPage> {
-  late List<Map<String, String>> flashcardsList;
+  late List<Flashcard> flashcardsList;
 
   @override
   void initState() {
     super.initState();
-    flashcardsList = List<Map<String, String>>.from(widget.flashcards);
+    flashcardsList = List<Flashcard>.from(widget.flashcards);
     flashcardsList.shuffle();
   }
 
   double _calculateProgress() {
     if (flashcardsList.isEmpty) return 0;
-    int learnedCount = flashcardsList.where((f) => f['isLearned'] == 'true').length;
-    return learnedCount / flashcardsList.length;
+    int learned = flashcardsList.where((f) => f.isLearned).length;
+    return learned / flashcardsList.length;
   }
 
   @override
@@ -115,24 +119,22 @@ class _FlashcardListPageState extends State<FlashcardListPage> {
                                 setState(() {
                                   flashcardsList.removeAt(index);
                                 });
-                                Navigator.pop(context);
                               },
-                              onEdit: (updatedFlashcard) {
+                              onEdit: (updatedCard) {
                                 setState(() {
-                                  flashcardsList[index] = updatedFlashcard;
+                                  flashcardsList[index] = updatedCard;
                                 });
                               },
                               onMarkHarder: () {
                                 setState(() {
-                                  flashcardsList[index]['difficulty'] = 'Hard';
+                                  flashcardsList[index].difficulty = 'Hard';
+                                  flashcardsList[index].save(); // save to Hive
                                 });
                               },
                               onMarkLearned: () {
                                 setState(() {
-                                  flashcardsList[index]['isLearned'] =
-                                  flashcardsList[index]['isLearned'] == 'true'
-                                      ? 'false'
-                                      : 'true';
+                                  flashcardsList[index].isLearned = !flashcardsList[index].isLearned;
+                                  flashcardsList[index].save(); // save to Hive
                                 });
                               },
                             ),
@@ -154,7 +156,7 @@ class _FlashcardListPageState extends State<FlashcardListPage> {
                         ),
                         child: ListTile(
                           title: Text(
-                            flashcard['word'] ?? '',
+                            flashcard.word,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,

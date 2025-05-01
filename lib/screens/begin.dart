@@ -7,20 +7,18 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  bool showTextField = false; // switch between name input and initial button
+  bool showTextField = false;
   final TextEditingController _nameController = TextEditingController();
-  bool _isNameEmpty = true; // disables "Next" button if empty
+  bool _isNameEmpty = true;
 
   @override
   void initState() {
     super.initState();
-    // update button state when text changes
     _nameController.addListener(_updateButtonState);
   }
 
   @override
   void dispose() {
-    // clean controller to prevent memory leaks
     _nameController.removeListener(_updateButtonState);
     _nameController.dispose();
     super.dispose();
@@ -49,9 +47,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // return to flash icon if logo doesnt load
                 Image.asset(
-                  'assets/images/logo.png',
+                  'assets/images/logo1.png',
                   height: 150,
                   errorBuilder: (_, __, ___) => Icon(
                     Icons.flash_on,
@@ -61,7 +58,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 const SizedBox(height: 50),
 
-                // switch between button and text input
                 if (!showTextField) ...[
                   ElevatedButton(
                     onPressed: () => setState(() => showTextField = true),
@@ -72,10 +68,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text('Enter Your Name'),
+                    child: const Text(
+                      'Enter Your Name',
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
                 ] else ...[
-                  // customized text input container
                   Container(
                     width: 300,
                     decoration: BoxDecoration(
@@ -99,7 +97,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // navigate to HomePage when name isn't empty
                   ElevatedButton(
                     onPressed: _isNameEmpty
                         ? null
@@ -116,7 +113,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text('Next'),
+                    child: const Text(
+                      'Next',
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
                 ],
               ],

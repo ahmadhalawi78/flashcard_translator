@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import '../models/flashcard.dart';
 
 class AddFlashcardPage extends StatefulWidget {
   final List<String> categories;
-  final Function(Map<String, String> flashcard, String selectedCategory) onSave;
+  final Function(Flashcard flashcard, String category) onSave;
 
-  const AddFlashcardPage({required this.categories, required this.onSave});
+  const AddFlashcardPage({
+    required this.categories,
+    required this.onSave,
+  });
 
   @override
   _AddFlashcardPageState createState() => _AddFlashcardPageState();
@@ -16,7 +20,6 @@ class _AddFlashcardPageState extends State<AddFlashcardPage> {
   String? selectedCategory;
   String selectedDifficulty = 'Easy';
 
-  // Track errors
   bool wordError = false;
   bool meaningError = false;
   bool categoryError = false;
@@ -290,11 +293,11 @@ class _AddFlashcardPageState extends State<AddFlashcardPage> {
       return;
     }
 
-    final flashcard = {
-      'word': _wordController.text.trim(),
-      'meaning': _meaningController.text.trim(),
-      'difficulty': selectedDifficulty,
-    };
+    final flashcard = Flashcard(
+      word: _wordController.text.trim(),
+      meaning: _meaningController.text.trim(),
+      difficulty: selectedDifficulty,
+    );
 
     widget.onSave(flashcard, selectedCategory!);
     Navigator.pop(context);

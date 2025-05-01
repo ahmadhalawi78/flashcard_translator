@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
+import '../models/flashcard.dart';
 
 class FlashcardDetailPage extends StatefulWidget {
-  final Map<String, String> flashcard;
+  final Flashcard flashcard;
   final String categoryName;
   final VoidCallback onDelete;
-  final Function(Map<String, String>) onEdit;
+  final Function(Flashcard) onEdit;
   final VoidCallback onMarkHarder;
   final VoidCallback onMarkLearned;
 
@@ -100,7 +101,7 @@ class _FlashcardDetailPageState extends State<FlashcardDetailPage> {
           Text('FRONT', style: TextStyle(color: Colors.black54, fontSize: 16)),
           SizedBox(height: 20),
           Text(
-            widget.flashcard['word'] ?? '',
+            widget.flashcard.word,
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -186,7 +187,7 @@ class _FlashcardDetailPageState extends State<FlashcardDetailPage> {
           Text('BACK', style: TextStyle(color: Colors.black54, fontSize: 16)),
           SizedBox(height: 20),
           Text(
-            widget.flashcard['meaning'] ?? '',
+            widget.flashcard.meaning,
             style: TextStyle(fontSize: 24),
             textAlign: TextAlign.center,
           ),
@@ -196,7 +197,7 @@ class _FlashcardDetailPageState extends State<FlashcardDetailPage> {
             style: TextStyle(fontSize: 16, color: Colors.black87),
           ),
           Text(
-            'Difficulty: ${widget.flashcard['difficulty']}',
+            'Difficulty: ${widget.flashcard.difficulty}',
             style: TextStyle(fontSize: 16, color: Colors.black87),
           ),
           SizedBox(height: 30),
@@ -236,9 +237,7 @@ class _FlashcardDetailPageState extends State<FlashcardDetailPage> {
             elevation: 3,
           ),
           child: Text(
-            widget.flashcard['isLearned'] == 'true'
-                ? 'Unmark as Learned'
-                : 'Mark as Learned',
+            widget.flashcard.isLearned ? 'Unmark as Learned' : 'Mark as Learned',
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -247,7 +246,7 @@ class _FlashcardDetailPageState extends State<FlashcardDetailPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () => _showEditDialog(),
+              onPressed: _showEditDialog,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 minimumSize: Size(90, 40),
@@ -260,7 +259,11 @@ class _FlashcardDetailPageState extends State<FlashcardDetailPage> {
             ),
             SizedBox(width: 10),
             ElevatedButton(
-              onPressed: widget.onDelete,
+              onPressed: () {
+                widget.flashcard.delete(); // delete from Hive
+                widget.onDelete();
+                Navigator.pop(context);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red[400],
                 minimumSize: Size(90, 40),
@@ -278,18 +281,17 @@ class _FlashcardDetailPageState extends State<FlashcardDetailPage> {
   }
 
   void _checkAnswer() {
-    final userAnswer = _guessController.text.trim().toLowerCase();
-    final correctAnswer = (widget.flashcard['meaning'] ?? '').trim().toLowerCase();
+    final guess = _guessController.text.trim().toLowerCase();
+    final answer = widget.flashcard.meaning.trim().toLowerCase();
 
     setState(() {
-      _isCorrect = userAnswer == correctAnswer;
+      _isCorrect = guess == answer;
     });
   }
 
   void _showEditDialog() {
-    final wordController = TextEditingController(text: widget.flashcard['word']);
-    final meaningController = TextEditingController(text: widget.flashcard['meaning']);
-    String difficulty = widget.flashcard['difficulty'] ?? 'Easy';
+    final wordController = TextEditingController(text: widget.flashcard.word);
+    final meaningController = TextEditingController(text: widget.flashcard.meaning);
 
     showDialog(
       context: context,
@@ -366,11 +368,10 @@ class _FlashcardDetailPageState extends State<FlashcardDetailPage> {
                   SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () {
-                      widget.onEdit({
-                        'word': wordController.text.trim(),
-                        'meaning': meaningController.text.trim(),
-                        'difficulty': difficulty,
-                      });
+                      widget.flashcard.word = wordController.text.trim();
+                      widget.flashcard.meaning = meaningController.text.trim();
+                      widget.flashcard.save(); // save to Hive
+                      widget.onEdit(widget.flashcard);
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(

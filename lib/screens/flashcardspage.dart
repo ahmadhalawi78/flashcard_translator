@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'addflashcardpage.dart';
 import 'flashcardlistpage.dart';
+import '../models/flashcard.dart';
 
-class FlashcardsHomePage extends StatefulWidget {
+class FlashcardsPage extends StatefulWidget {
   @override
-  _FlashcardsHomePageState createState() => _FlashcardsHomePageState();
+  _FlashcardsPageState createState() => _FlashcardsPageState();
 }
 
-class _FlashcardsHomePageState extends State<FlashcardsHomePage> {
-  List<Map<String, dynamic>> categories = [];
+class _FlashcardsPageState extends State<FlashcardsPage> {
+  late Box<List<Flashcard>> categoryBox;
+
+  @override
+  void initState() {
+    super.initState();
+    categoryBox = Hive.box<List<Flashcard>>('categories');
+  }
 
   @override
   Widget build(BuildContext context) {
+    final categories = categoryBox.keys.cast<String>().toList();
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -51,7 +61,7 @@ class _FlashcardsHomePageState extends State<FlashcardsHomePage> {
                     children: [
                       const SizedBox(height: 20),
                       Expanded(
-                        child: categories.isEmpty
+                        child: categoryBox.isEmpty
                             ? Center(
                           child: Text(
                             'No categories yet.',
@@ -64,17 +74,20 @@ class _FlashcardsHomePageState extends State<FlashcardsHomePage> {
                             : ListView.builder(
                           itemCount: categories.length,
                           itemBuilder: (context, index) {
+                            final categoryName = categories[index];
+                            final flashcards =
+                                categoryBox.get(categoryName)?.cast<Flashcard>() ?? [];
+
                             return CategoryCard(
-                              title: categories[index]['name'],
-                              count: categories[index]['count'],
+                              title: categoryName,
+                              count: flashcards.length,
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (_) => FlashcardListPage(
-                                      flashcards: List<Map<String, String>>.from(
-                                          categories[index]['flashcards']),
-                                      categoryName: categories[index]['name'],
+                                      flashcards: flashcards,
+                                      categoryName: categoryName,
                                     ),
                                   ),
                                 );
@@ -92,17 +105,14 @@ class _FlashcardsHomePageState extends State<FlashcardsHomePage> {
                             context,
                             MaterialPageRoute(
                               builder: (_) => AddFlashcardPage(
-                                categories: categories.map((e) => e['name'] as String).toList(),
+                                categories: categories,
                                 onSave: (flashcard, selectedCategory) {
-                                  setState(() {
-                                    for (var cat in categories) {
-                                      if (cat['name'] == selectedCategory) {
-                                        cat['flashcards'].add(flashcard);
-                                        cat['count'] = cat['flashcards'].length;
-                                        break;
-                                      }
-                                    }
-                                  });
+                                  final currentList = categoryBox
+                                      .get(selectedCategory)
+                                      ?.cast<Flashcard>() ?? [];
+                                  currentList.add(flashcard);
+                                  categoryBox.put(selectedCategory, currentList);
+                                  setState(() {});
                                 },
                               ),
                             ),
@@ -192,14 +202,10 @@ class _FlashcardsHomePageState extends State<FlashcardsHomePage> {
                   SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () {
-                      if (_controller.text.trim().isNotEmpty) {
-                        setState(() {
-                          categories.add({
-                            'name': _controller.text.trim(),
-                            'count': 0,
-                            'flashcards': [],
-                          });
-                        });
+                      final name = _controller.text.trim();
+                      if (name.isNotEmpty && !categoryBox.containsKey(name)) {
+                        categoryBox.put(name, <Flashcard>[]);
+                        setState(() {});
                         Navigator.pop(context);
                       }
                     },

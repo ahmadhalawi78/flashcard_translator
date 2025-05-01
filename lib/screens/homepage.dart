@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'flashcardspage.dart';
+import '../models/flashcard.dart';
 import 'package:flashcard_translator/translation/translation_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -35,12 +36,12 @@ class HomePage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,  // Changed to white for better visibility
+                      color: Colors.white,
                     ),
                   ),
                 ),
 
-                // Lottie Animation
+                // Lottie Animation with container decoration
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -83,7 +84,7 @@ class HomePage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => FlashcardsHomePage()),
+                            MaterialPageRoute(builder: (context) => FlashcardsPage()),
                           );
                         },
                       ),
@@ -99,7 +100,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// Updated Rounded Button Widget to match orange theme
+// Updated Rounded Button Widget
 class RoundedButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
