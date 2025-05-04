@@ -60,14 +60,12 @@ class _AddFlashcardPageState extends State<AddFlashcardPage> {
                 centerTitle: true,
               ),
 
-              // Form Content
               Expanded(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Word Field
                       Text(
                         'Word',
                         style: TextStyle(
@@ -102,7 +100,6 @@ class _AddFlashcardPageState extends State<AddFlashcardPage> {
                       ),
                       SizedBox(height: 20),
 
-                      // Meaning Field
                       Text(
                         'Meaning',
                         style: TextStyle(
@@ -137,7 +134,6 @@ class _AddFlashcardPageState extends State<AddFlashcardPage> {
                       ),
                       SizedBox(height: 20),
 
-                      // Category Dropdown
                       Text(
                         'Category',
                         style: TextStyle(
@@ -196,7 +192,6 @@ class _AddFlashcardPageState extends State<AddFlashcardPage> {
                         ),
                       SizedBox(height: 20),
 
-                      // Difficulty Dropdown
                       Text(
                         'Difficulty',
                         style: TextStyle(
@@ -242,7 +237,6 @@ class _AddFlashcardPageState extends State<AddFlashcardPage> {
                       ),
                       SizedBox(height: 40),
 
-                      // Save Button
                       Center(
                         child: ElevatedButton(
                           onPressed: _saveFlashcard,

@@ -8,10 +8,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
-  // ✅ Register your model adapter
   Hive.registerAdapter(FlashcardAdapter());
 
-  // ✅ Re-open it with correct type
   await Hive.openBox<List<Flashcard>>('categories');
 
   runApp(const FlashcardApp());

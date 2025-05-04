@@ -53,7 +53,6 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
                 iconTheme: IconThemeData(color: Colors.white),
               ),
 
-              // Main Content
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -235,7 +234,7 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
   }
 }
 
-// Updated Category Card Widget
+
 class CategoryCard extends StatelessWidget {
   final String title;
   final int count;
@@ -297,7 +296,7 @@ class CategoryCard extends StatelessWidget {
   }
 }
 
-// Updated Flashcard Button Widget
+
 class FlashcardButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;

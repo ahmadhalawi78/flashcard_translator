@@ -59,7 +59,7 @@ class _TranslationPageState extends State<TranslationPage> {
                 centerTitle: true,
               ),
 
-              // Content
+
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -117,7 +117,7 @@ class _TranslationPageState extends State<TranslationPage> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Text Input
+
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.8),
@@ -143,7 +143,7 @@ class _TranslationPageState extends State<TranslationPage> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Translate Button
+
                       ElevatedButton(
                         onPressed: _isTranslating ? null : _translate,
                         style: ElevatedButton.styleFrom(
@@ -174,7 +174,7 @@ class _TranslationPageState extends State<TranslationPage> {
                       ),
                       const SizedBox(height: 10),
 
-                      // Error Message
+
                       if (_errorMessage.isNotEmpty)
                         Text(
                           _errorMessage,
@@ -184,7 +184,7 @@ class _TranslationPageState extends State<TranslationPage> {
                           ),
                         ),
 
-                      // Translation Result
+
                       if (_translatedText.isNotEmpty) ...[
                         const SizedBox(height: 20),
                         Expanded(

@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
 
-                // Lottie Animation with container decoration
+
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -64,7 +64,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
 
-                // Buttons Column
+
                 Padding(
                   padding: const EdgeInsets.only(bottom: 40.0),
                   child: Column(
@@ -100,7 +100,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// Updated Rounded Button Widget
+
 class RoundedButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;

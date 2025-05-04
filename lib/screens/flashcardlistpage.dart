@@ -64,7 +64,6 @@ class _FlashcardListPageState extends State<FlashcardListPage> {
                 iconTheme: IconThemeData(color: Colors.white),
               ),
 
-              // Progress Indicator
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Column(
@@ -91,7 +90,6 @@ class _FlashcardListPageState extends State<FlashcardListPage> {
               ),
               SizedBox(height: 10),
 
-              // Flashcards List
               Expanded(
                 child: flashcardsList.isEmpty
                     ? Center(
